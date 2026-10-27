@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Beatflow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;700&family=Syne:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body>
+    <div class="backdrop"></div>
+    <main class="shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Beatflow</p>
+          <h1>Turn beats into publish-ready YouTube content.</h1>
+          <p class="hero-copy">Upload a beat, generate a visual, optimize metadata, then publish with OAuth.</p>
+        </div>
+        <button id="connectYouTubeTop" class="ghost-button">Connect YouTube</button>
+      </header>
+
+      <nav class="main-nav">
+        <button class="nav-link active" data-view="upload">Upload</button>
+        <button class="nav-link" data-view="dashboard">Dashboard</button>
+        <button class="nav-link" data-view="settings">Settings</button>
+      </nav>
+
+      <section class="stepper" id="upload-stepper">
+        <button class="step is-active" data-step="1"><span>01</span> Upload</button>
+        <button class="step" data-step="2"><span>02</span> Preview</button>
+        <button class="step" data-step="3"><span>03</span> Publish</button>
+      </section>
+
+      <section class="status-row">
+        <div id="connectionStatus" class="status-chip">YouTube not connected</div>
+        <div id="jobStatus" class="status-chip">No job running</div>
+      </section>
+
+      <section class="panels">
+        <article class="panel is-visible" data-panel="1" id="step-1">
+          <section class="drafts-section" id="drafts-section">
+            <div class="drafts-header">
+              <div class="drafts-title-row">
+                <h2 class="drafts-heading">📁 Saved Drafts</h2>
+                <button class="ghost-button drafts-toggle" id="drafts-toggle-btn" type="button" aria-expanded="false">
+                  Show <span id="drafts-count">(0)</span>
+                </button>
+              </div>
+            </div>
+            <div class="drafts-body" id="drafts-body" style="display:none;">
+              <div class="drafts-list" id="drafts-list"></div>
+            </div>
+          </section>
+
+          <div id="dropzone" class="dropzone">
+            <input id="audioInput" type="file" accept="audio/mpeg,audio/wav,.mp3,.wav" hidden />
+            <input id="thumbnailInput" type="file" accept="image/png,image/jpeg,.png,.jpg,.jpeg" hidden />
+            <p class="eyebrow">Step 1</p>
+            <h2>Drop a beat file or choose one manually.</h2>
+            <p>MP3 or WAV only. JPG/PNG thumbnails are optional.</p>
+            <div class="actions-row">
+              <button id="browseAudio" class="primary-button" type="button">Choose Audio</button>
+              <button id="browseThumbnail" class="secondary-button" type="button">Choose Thumbnail</button>
+            </div>
+            <p id="selectedFiles" class="fine-print">No files selected yet.</p>
+            <p id="draft-loaded-banner" class="draft-loaded-banner hidden">Draft loaded — please re-upload your beat audio to continue.</p>
+          </div>
+
+          <div class="form-group clips-upload-group">
+            <label class="form-label">Add artist clips (optional)</label>
+            <p class="clips-upload-hint">
+              Upload short video clips of the artist — Beatflow will stitch them into a montage
+              that plays throughout the beat. Leave empty to use a static thumbnail instead.
+            </p>
+
+            <div class="clips-upload-zone" id="clips-upload-zone">
+              <div class="upload-icon">🎬</div>
+              <p class="upload-label">Drop artist clips here</p>
+              <p class="upload-sub">MP4, MOV, or WebM · up to 20 clips · 100MB each</p>
+              <button class="btn-ghost" type="button">Browse files</button>
+            </div>
+
+            <div class="clips-preview-grid" id="clips-preview-grid">
+              <!-- Populated by JS — one thumbnail card per uploaded clip -->
+            </div>
+          </div>
+
+          <form id="beatForm" class="form-grid">
+            <label>
+              Beat Name
+              <input id="beat-name" name="beatName" required placeholder="Midnight Drip" />
+              <span class="field-error"></span>
+            </label>
+            <label>
+              BPM
+              <input id="bpm" name="bpm" type="number" min="1" max="300" required placeholder="140" />
+              <span class="field-error"></span>
+            </label>
+            <label>
+              Key
+              <div class="split-row">
+                <select id="key" name="key" required>
+                  <option value="C">C</option><option value="C#">C#</option><option value="D">D</option><option value="D#">D#</option><option value="E">E</option><option value="F">F</option><option value="F#">F#</option><option value="G">G</option><option value="G#">G#</option><option value="A">A</option><option value="A#">A#</option><option value="B">B</option>
+                </select>
+                <select id="scale" name="scale">
+                  <option value="Minor">Minor</option>
+                  <option value="Major">Major</option>
+                </select>
+              </div>
+              <span class="field-error"></span>
+            </label>
+            <label>
+              Artist A
+              <input id="artist-a" name="artistA" required placeholder="Drake" />
+              <span class="field-error"></span>
+            </label>
+            <label>
+              Artist B
+              <input id="artist-b" name="artistB" placeholder="Future" />
+              <span class="field-error"></span>
+            </label>
+            <label>
+              License Type
+              <select name="licenseType">
+                <option>Free</option>
+                <option>Premium</option>
+                <option>Exclusive</option>
+              </select>
+              <span class="field-error"></span>
+            </label>
+            <label>
+              Price
+              <input name="price" type="text" placeholder="$29.99" />
+              <span class="field-error"></span>
+            </label>
+            <label class="span-2">
+              Beatstars Link
+              <input name="beatstarsLink" type="url" placeholder="https://beatstars.com/..." />
+              <span class="field-error"></span>
+            </label>
+            <label class="span-2">
+              Producer Tag / Watermark
+              <input id="producer-tag" name="producerTag" placeholder="Prod. by FlowBeats" />
+              <span class="field-error"></span>
+            </label>
+            <div class="span-2">
+              <p class="label">Genre / Vibe Tags</p>
+              <div id="genreChips" class="chip-row"></div>
+            </div>
+          </form>
+
+          <div class="overlay-section card">
+            <div class="overlay-section-header">
+              <label class="form-label overlay-toggle-label">Text overlay</label>
+              <label class="toggle-switch" title="Show beat info on the video">
+                <input type="checkbox" id="overlay-enabled" checked>
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+
+            <div class="overlay-controls" id="overlay-controls">
+              <label class="form-label">Preview</label>
+              <canvas id="overlay-preview-canvas" width="640" height="360"
+                      class="overlay-preview-canvas"></canvas>
+              <p class="overlay-preview-note">
+                Beat name centered · Producer tag at bottom · Final render uses Anton + Raleway Bold fonts
+              </p>
+            </div>
+          </div>
+
+          <div class="panel-footer spread">
+            <button id="save-draft-btn" class="ghost-button" type="button">💾 Save Draft</button>
+            <button id="generatePreview" class="primary-button" type="button">Generate Preview</button>
+          </div>
+        </article>
+
+        <article class="panel" data-panel="2">
+          <div class="two-col">
+            <div class="preview-card">
+              <p class="eyebrow">Generated thumbnail</p>
+              <img id="previewImage" class="preview-image" alt="Beat preview" src="/assets/default-visualizer.svg" />
+              <video id="videoPreview" class="preview-image hidden" controls playsinline></video>
+              <div class="progress-wrap">
+                <div id="conversionProgress" class="progress-bar"></div>
+              </div>
+              <p id="conversionLabel" class="fine-print">Waiting for conversion.</p>
+              <button id="retryConversion" class="secondary-button hidden" type="button">Try again</button>
+            </div>
+            <div class="editor-card">
+              <div class="title-preview-block">
+                <p class="label">Generated YouTube Title</p>
+                <div id="title-preview" class="title-preview-display">[FREE] Artist A Type Beat | 2026</div>
+                <span class="title-char-count" id="title-char-count">0 / 100</span>
+              </div>
+              <label>
+                Title
+                <input id="titleInput" />
+              </label>
+              <div class="hashtag-preview-block">
+                <label class="form-label label">Hashtags (appear above your video title)</label>
+                <div class="hashtag-chip-row" id="hashtag-preview-row">
+                  <!-- Populated by JS after metadata generation -->
+                </div>
+                <p class="hashtag-preview-note">
+                  First 3 appear above your video title. Max 5 — exceeding 15 causes YouTube to ignore all of them.
+                </p>
+              </div>
+              <label>
+                Description
+                <textarea id="descriptionInput" rows="15"></textarea>
+              </label>
+              <div>
+                <p class="label">Tags</p>
+                <div id="tagList" class="chip-row"></div>
+              </div>
+              <button id="regenerateMetadata" class="secondary-button" type="button">Regenerate metadata</button>
+            </div>
+          </div>
+          <div class="panel-footer spread">
+            <button id="backToUpload" class="ghost-button" type="button">Back</button>
+            <button id="toPublish" class="primary-button" type="button">Continue to Publish</button>
+          </div>
+        </article>
+
+        <article class="panel" data-panel="3">
+          <div class="two-col">
+            <div class="publish-card">
+              <p class="eyebrow">YouTube connection</p>
+              <div id="publishConnectionCard" class="connection-card">Not connected</div>
+              <button id="connectYouTubeBottom" class="secondary-button" type="button">Connect YouTube</button>
+              
+              <div class="schedule-block card">
+                <p class="label">When to publish</p>
+                <div class="schedule-mode-toggle">
+                  <button class="schedule-mode-btn active" data-mode="now" type="button">Publish now</button>
+                  <button class="schedule-mode-btn" data-mode="schedule" type="button">Schedule for later</button>
+                </div>
+                <div class="schedule-datetime-row" id="schedule-datetime-row" style="display:none;">
+                  <input type="datetime-local" id="schedule-datetime" class="form-input" />
+                  <button class="ghost-button" id="suggest-time-btn" type="button">✨ Suggest best time</button>
+                </div>
+                <div class="schedule-suggestion" id="schedule-suggestion" style="display:none;">
+                  <p class="schedule-suggestion-text" id="schedule-suggestion-text"></p>
+                  <span class="schedule-confidence-badge" id="schedule-confidence-badge"></span>
+                </div>
+              </div>
+              
+              <label>
+                Privacy
+                <select id="privacySelect">
+                  <option value="public">Public</option>
+                  <option value="unlisted">Unlisted</option>
+                  <option value="private">Private</option>
+                </select>
+              </label>
+              <button id="publishButton" class="primary-button large" type="button">🚀 Publish to YouTube</button>
+            </div>
+            <div class="publish-card">
+              <p class="eyebrow">Upload progress</p>
+              <div class="progress-wrap">
+                <div id="uploadProgress" class="progress-bar"></div>
+              </div>
+              <p id="publishStatus" class="fine-print">Ready to publish.</p>
+              <div id="successCard" class="success-card hidden"></div>
+            </div>
+          </div>
+          <div class="panel-footer spread">
+            <button id="backToPreview" class="ghost-button" type="button">Back</button>
+          </div>
+        </article>
+      </section>
+
+      <section id="dashboard-view" class="view" style="display:none;">
+        <h1 class="dashboard-heading">Channel Performance</h1>
+
+        <div class="dashboard-baseline-row" id="dashboard-baseline">
+          <!-- Populated by JS: avg view %, avg views/video, sample size -->
+        </div>
+
+        <h2 class="dashboard-subheading">Recent uploads</h2>
+        <div class="dashboard-video-list" id="dashboard-video-list">
+          <!-- Populated by JS -->
+        </div>
+      </section>
+
+      <section id="settings-view" class="view" style="display:none;">
+        <h1 class="dashboard-heading">Producer Profile</h1>
+        <p class="settings-hint">
+          This information appears at the bottom of every video description, so viewers know how to
+          reach you and follow your work.
+        </p>
+
+        <div class="card settings-card">
+          <div class="form-group">
+            <label class="form-label">Instagram handle</label>
+            <input type="text" id="settings-ig" class="form-input" placeholder="yourhandle">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Contact email</label>
+            <input type="email" id="settings-email" class="form-input" placeholder="bookings@yourname.com">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Channel tagline (optional)</label>
+            <input type="text" id="settings-tagline" class="form-input" placeholder="New dancehall beats every week">
+          </div>
+          <button class="primary-button" id="settings-save-btn">Save profile</button>
+        </div>
+      </section>
+    </main>
+    <script type="module" src="/js/app.js"></script>
+    <script type="module" src="/js/clips.js"></script>
+    <script type="module" src="/js/overlayPreview.js"></script>
+    <script type="module" src="/js/dashboard.js"></script>
+    <script type="module" src="/js/settings.js"></script>
+  </body>
+</html>

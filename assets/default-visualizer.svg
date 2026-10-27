@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080" role="img" aria-label="Beatflow default visualizer">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#05050a" />
+      <stop offset="55%" stop-color="#10111a" />
+      <stop offset="100%" stop-color="#07070d" />
+    </linearGradient>
+    <radialGradient id="glow" cx="72%" cy="30%" r="36%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.55" />
+      <stop offset="55%" stop-color="#7c3aed" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+    <filter id="blur">
+      <feGaussianBlur stdDeviation="18" />
+    </filter>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)" />
+  <rect width="1920" height="1080" fill="url(#glow)" />
+  <g opacity="0.14" stroke="#ffffff" stroke-width="1">
+    <path d="M0 120H1920M0 240H1920M0 360H1920M0 480H1920M0 600H1920M0 720H1920M0 840H1920M0 960H1920" />
+    <path d="M160 0V1080M320 0V1080M480 0V1080M640 0V1080M800 0V1080M960 0V1080M1120 0V1080M1280 0V1080M1440 0V1080M1600 0V1080M1760 0V1080" />
+  </g>
+  <g filter="url(#blur)" opacity="0.55">
+    <circle cx="1440" cy="320" r="210" fill="#7c3aed" fill-opacity="0.35" />
+    <circle cx="500" cy="770" r="180" fill="#06b6d4" fill-opacity="0.18" />
+  </g>
+  <g stroke="#a855f7" stroke-width="8" stroke-linecap="round" opacity="0.85">
+    <path d="M170 760V620" />
+    <path d="M210 760V560" />
+    <path d="M250 760V500" />
+    <path d="M290 760V610" />
+    <path d="M330 760V470" />
+    <path d="M370 760V540" />
+    <path d="M410 760V590" />
+    <path d="M450 760V515" />
+    <path d="M490 760V560" />
+    <path d="M530 760V455" />
+    <path d="M570 760V600" />
+    <path d="M610 760V520" />
+  </g>
+  <text x="170" y="350" fill="#f8fafc" font-family="Space Grotesk, Inter, Arial, sans-serif" font-size="112" font-weight="700" letter-spacing="2">BEATFLOW</text>
+  <text x="170" y="452" fill="#cbd5e1" font-family="Inter, Arial, sans-serif" font-size="54" font-weight="700">Default Visualizer</text>
+  <text x="170" y="525" fill="#64748b" font-family="Inter, Arial, sans-serif" font-size="32">Ready for beat upload, metadata, and YouTube publish.</text>
+</svg>
