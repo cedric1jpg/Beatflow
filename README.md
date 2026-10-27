@@ -8,7 +8,7 @@ Beatflow turns a producer's beat upload into a YouTube-ready MP4, SEO metadata, 
 
 | Production Analytics Dashboard | Application Control Panel |
 | :---: | :---: |
-| <img src="./assets/analytics.png" width="450" alt="YouTube Analytics Dashboard"/> | <img src="./assets/app-ui1.png" width="450" alt="Application UI Page 1"/> |
+| <img src="./assets/analytics.PNG" width="450" alt="YouTube Analytics Dashboard"/> | <img src="./assets/app-ui1.png" width="450" alt="Application UI Page 1"/> |
 | *11.6k Views Automated Growth Analytics* | *Core User Interface Dashboard* |
 | **Authentication Flow** | **Metadata Deployment Handler** |
 | <img src="./assets/app-ui2.png" width="450" alt="Application UI Page 2"/> | <img src="./assets/app-ui3.png" width="450" alt="Application UI Page 3"/> |
